@@ -1,1 +1,1 @@
-# mode-effects-database
+This is a repository for a page hosting a searchable database of survey mode effects reported in experimental and quasi-experimental studies. This database is part of the 'Assessing and Disseminating Methods for Handling Mode Effects' project within the larger Survey Futures collaboration, funded by the Economic and Social Research Council (ES/X014150/1). The study has been pre-registered on the Open Science Framework: https://osf.io/bs5dw
