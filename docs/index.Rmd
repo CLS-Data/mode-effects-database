@@ -1,0 +1,350 @@
+---
+title: "MODE EFFECTS DATABASE"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    theme: 
+      bg: "#FFFFFF"        # white background
+      fg: "#000000"        # black text
+      primary: "#dc345c"   # accent colour cls
+      base_font: 
+        google: "Open Sans"
+        
+---
+
+<style>
+
+/* DESIGN */
+
+/* navigation tabs colour */
+.navbar-nav > li > a {
+  color: #FFFFFF !important;
+}
+
+/* navigation bar always visible */
+.navbar {
+  z-index: 4000;
+}
+
+/* fixed pagination box */
+.dataTables_wrapper .dataTables_paginate.fixed-pager {
+  position: fixed;
+  bottom: 0;
+  left: 0;                
+  transform: none;    
+  z-index: 3000;
+  background: #fff;
+  padding: 0.5em 1em;
+  border-top: 1px solid #ccc;
+  box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* keep left */
+  gap: 1rem;
+  max-width: 100%;
+  border-radius: 4px 4px 0 0;
+}
+
+/* margins */
+.main-container,
+.tab-content {
+  margin-bottom: 60px; 
+  margin-top: 5px;
+  padding-bottom: 1000px;  
+}
+
+/* small info text */
+.results-info {
+  font-size: 0.9em;
+  color: #555;
+  margin-right: 1em;
+}
+
+/* pinned search bar */
+.fixed-searchbox {
+  position: fixed;
+  top: 50px;        
+  right: 20px;    
+  z-index: 3500;    
+  background: #fff;
+  padding: 0.5em 1em;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+</style>
+
+
+```{r setup, include=FALSE}
+
+library(flexdashboard)
+library(DT)
+library(dplyr)
+library(htmltools)
+library(bslib)
+
+# data
+mode_effects <- readRDS("mode_effects.RDS")
+studies_info <- readRDS("studies_info.RDS")
+```
+
+Intro
+=====================================
+
+Column
+-------------------------------------
+
+<h5> Introduction </h5>
+<hr style="border:2px solid gray">
+
+This searchable database contains a comprehensive collection of mode effects estimates. Here you will find mode effect estimates obtained from experimental or quasi-experimental studies that have either been embedded within existing surveys, or have been conducted as part of standalone experiments in the general population or age-, sex-, or region-specific strata of the general population.
+
+The purpose of this database is to allow users of mixed-mode data to easily find a mode effect reported in the literature for a specific variable, mode comparison, and a population of interest. This estimate can then be used to explore the sensitivity of findings based on the size of the mode effect that may be expected, or as a way to calibrate measures to a single mode. See [Wright et al. (2024)](https://cls.ucl.ac.uk/data_documentation/handling-mode-effects-in-the-cls-cohort-studies-user-guide-nov-2024/) for more details.
+
+The mode effects have been located using a systematic search of the bibliographic databases Scopus, Embase 1974-2025, MEDLINE 1946-2025, Health and Psychosocial Instruments, APA PsycInfo, APA PsycExtra, Web of Science Core Collection (all searched in March 2025). Searches were also conducted in Google Scholar and within the citations and references of the already included studies.
+
+<h5>How to use </h5>
+<hr style="border:2px solid gray">
+
+1. To use the database, navigate to the 'Mode effects' tab, where you can search for mode effect estimates based on specific item, item category, population, year of publication, country, and other details. All fields are searchable or have an available drop-down menu to make it easier to narrow down to relevant mode effects. The global search field in the top-right corner searches all fields in the database simultaneously. The custom search builder in the top-left corner allows users to build a combination of searches. For example, by combining 1) "Sub-category", "Equals", "Smoking", and 2) "Reference mode", "Contains", then typing "web", results will be filtered to those items related to smoking for which the reference mode contains 'Web'. An alternative way to search is to use the filter boxes at the top of each column, which are either free text or drop-down menus, and allow building of more complex search combinations. 
+
+2. The 'Study details' tab contains more information about the design and reporting of each study. To see more details about the study from which a mode effect estimate has been obtained, the two tables can be cross-referenced using the unique ID in the first column.
+
+*Things to note:*
+
+• Not all relevant values were reported in all studies. Where possible, we have derived additional measures based on the information provided. Any values that have been derived post-hoc are presented in italics.
+
+• Where a cell is empty, this means that no sufficient information was reported in the study to allow for direct extraction or derivation.
+
+• Where possible, we prioritised extracting unadjusted estimates to allow consistency in comparisons. However, where selection weighting was applied, we prioritised the weighted estimates since they should be more generalisable. Further details of our extraction strategy can be seen in our [pre-registered protocol](https://osf.io/bs5dw).
+
+<br>
+
+<h5> Further resources </h5>
+<hr style="border:2px solid gray">
+
+For a detailed introduction and discussion of methods for handling mode effects, please see the following user guidance:
+
+[**Wright et al. 2024. Handling Mode Effects in the CLS Cohort Studies**](https://cls.ucl.ac.uk/data_documentation/handling-mode-effects-in-the-cls-cohort-studies-user-guide-nov-2024/)
+
+<br>
+
+<h5>About the project</h5>
+<hr style="border:2px solid gray">
+
+This database was created as part of the 'Assessing and Disseminating Methods for Handling Mode Effects' project within the Survey Data Collection Methods Collaboration ([**Survey Futures**](https://surveyfutures.net)), funded by the **Economic and Social Research Council** (ES/X014150/1).
+
+Authors:\
+Georgia Tomova, g.tomova@ucl.ac.uk | Richard Silverwood, r.silverwood@ucl.ac.uk | Liam Wright, liam.wright@ucl.ac.uk\
+
+[**UCL Centre for Longitudinal Studies**](http://cls.ucl.ac.uk)
+
+<br>
+
+Mode effects
+=====================================
+
+Column
+-------------------------------------
+```{r mode-effects-table}
+datatable(
+  mode_effects,
+  container = htmltools::withTags(table(
+    class = 'display',
+    thead(
+      tr(
+        # spanners
+        th(colspan = 8, 'Study', style = 'text-align: center; background-color: #e9ecef;'),
+        th(colspan = 4, 'Variable', style = 'text-align: center; background-color: #d1ecf1;'),
+        th(colspan = 2, 'Mode', style = 'text-align: center; background-color: #d1ecf1;'),
+        th(colspan = 2, 'Measure', style = 'text-align: center; background-color: #d1ecf1;'),
+        th(colspan = 10, 'Mode effect', style = 'text-align: center; background-color: #f9dce3;'), 
+        th(colspan = 2, 'Sample size', style = 'text-align: center; background-color: #e9ecef;'),
+      ),
+tr(lapply(seq_along(names(mode_effects)), function(i) {
+          col_name <- names(mode_effects)[i]
+          if (i %in% c(8, 12, 14, 16, 26)) { # darker borders for these
+            th(col_name, style = 'border-right: 2px solid #666;')
+          } else {
+            th(col_name)
+          }
+        })
+      )
+    )
+  )),
+  rownames = FALSE,
+  extensions = c("SearchBuilder", "DateTime"),
+  options = list(
+    dom = 'Qlfrt<"dt-bottom-left"p>',
+    searchBuilder = TRUE,
+    searchHighlight = TRUE,
+    pageLength = 100,
+    scrollY = "55vh",
+    scrollCollapse = FALSE,
+    scrollX = TRUE,
+    # ensure search box is always fixed above table
+    initComplete = JS("
+      function(settings, json) {
+        var api = this.api();
+        var tableContainer = $(api.table().container());
+        var searchBox = tableContainer.find('div.dataTables_filter');
+
+        if (searchBox.length) {
+          var wrapperId = 'searchbox-wrapper-' + settings.sInstance;
+          if (!$('#' + wrapperId).length) {
+            // insert a wrapper before the table
+            tableContainer.before('<div id=\"' + wrapperId + '\" class=\"fixed-searchbox\"></div>');
+      }
+      $('#' + wrapperId).append(searchBox);
+    }
+  }
+"),
+# ensure paginator is always fixed at bottom left and showing the n of results displayed
+drawCallback = JS("
+  function(settings) {
+    var api = this.api();
+    var wrapper = $(api.table().container()); // DataTables wrapper for this table
+    var $pager = wrapper.find('.dataTables_paginate');
+
+    if ($pager.length) {
+      $pager.addClass('fixed-pager');
+
+      var infoId = 'results-info-' + settings.sInstance;
+      if (!$('#' + infoId).length) {
+        $pager.prepend('<span id=\"' + infoId + '\" class=\"results-info\"></span>');
+      }
+
+      var pageInfo = api.page.info();
+      var filtered = pageInfo.recordsDisplay;
+      var overall = pageInfo.recordsTotal;
+      var showingStart = filtered === 0 ? 0 : pageInfo.start + 1;
+      var showingEnd = filtered === 0 ? 0 : pageInfo.end;
+
+      var resultsText;
+      if (filtered === 0) {
+        resultsText = 'No results found';
+      } else {
+        resultsText = 'Showing ' + showingStart + '–' + showingEnd +
+                      ' of ' + filtered + ' results' +
+                      (filtered !== overall ? ' (filtered from ' + overall + ')' : '');
+      }
+
+      $('#' + infoId).text(resultsText);
+    }
+  }
+")
+  ),
+  filter = "top",
+  escape = FALSE
+) %>%
+  formatStyle(c("Mode effect estimate", "Standardised mode effect estimate"), backgroundColor = "#f9dce3")%>%
+  formatStyle(columns = c(8, 12, 14, 16, 26), `border-right` = "2px solid #666")
+```
+
+<div style="position: fixed; bottom: 0px; right: 20px; z-index: 1000; margin: 0px 0;">
+  <a href="mode_effects_database_download.xlsx" download class="btn btn-primary">⬇️ Download</a>
+</div>
+
+Details of each study
+=====================================
+
+Column
+-------------------------------------
+
+```{r studies-table}
+datatable(studies_info,
+          container = htmltools::withTags(table(
+    class = 'display',
+    thead(
+      tr(
+        # spanners
+        th(colspan = 6, 'General', style = 'text-align: center; background-color: #e9ecef;'),
+        th(colspan = 8, 'Design', style = 'text-align: center; background-color: #ffffed;'),
+        th(colspan = 9, 'Quality and appraisal', style = 'text-align: center; background-color: #ffd3c0;'),
+      ),
+     tr(lapply(seq_along(names(studies_info)), function(i) {
+          col_name <- names(studies_info)[i]
+          if (i %in% c(6, 14)) { # darker borders for these
+            th(col_name, style = 'border-right: 2px solid #666;')
+          } else {
+            th(col_name)
+          }
+        })
+      )
+    )
+  )),
+         rownames = FALSE,
+         extensions=c("SearchBuilder", "DateTime"),
+          options = list(
+            dom = 'Qlfrt<"dt-bottom-left"p>',
+            searchBuilder = TRUE,
+            lengthMenu = list(c(10, 50, -1), c('10', '50', 'All')),
+            pageLength = 50,
+            scrollY = "55vh",
+            scrollCollapse = FALSE,
+            autoWidth = TRUE,
+            columnDefs = list(list(width = "100px", targets = "_all")),
+            # ensure search box is always fixed above table
+    initComplete = JS("
+  function(settings, json) {
+    var api = this.api();
+    var tableContainer = $(api.table().container());
+    var searchBox = tableContainer.find('div.dataTables_filter');
+
+    if (searchBox.length) {
+      var wrapperId = 'searchbox-wrapper-' + settings.sInstance;
+      if (!$('#' + wrapperId).length) {
+        // insert a wrapper before the table
+        tableContainer.before('<div id=\"' + wrapperId + '\" class=\"fixed-searchbox\"></div>');
+      }
+      $('#' + wrapperId).append(searchBox);
+    }
+  }
+"),
+# ensure paginator is always fixed at bottom left and showing the n of results displayed
+drawCallback = JS("
+  function(settings) {
+    var api = this.api();
+    var wrapper = $(api.table().container()); // DataTables wrapper for this table
+    var $pager = wrapper.find('.dataTables_paginate');
+
+    if ($pager.length) {
+      $pager.addClass('fixed-pager');
+
+      var infoId = 'results-info-' + settings.sInstance;
+      if (!$('#' + infoId).length) {
+        $pager.prepend('<span id=\"' + infoId + '\" class=\"results-info\"></span>');
+      }
+
+      var pageInfo = api.page.info();
+      var filtered = pageInfo.recordsDisplay;
+      var overall = pageInfo.recordsTotal;
+      var showingStart = filtered === 0 ? 0 : pageInfo.start + 1;
+      var showingEnd = filtered === 0 ? 0 : pageInfo.end;
+
+      var resultsText;
+      if (filtered === 0) {
+        resultsText = 'No results found';
+      } else {
+        resultsText = 'Showing ' + showingStart + '–' + showingEnd +
+                      ' of ' + filtered + ' results' +
+                      (filtered !== overall ? ' (filtered from ' + overall + ')' : '');
+      }
+
+      $('#' + infoId).text(resultsText);
+    }
+  }
+")
+         ),
+          filter = "top",
+          escape = FALSE,
+          height = "auto",
+          width = "100%") %>%
+formatStyle(columns = 1:ncol(studies_info), fontSize = '12px') %>%
+  formatStyle(columns = c(6, 14), `border-right` = "2px solid #666")
+```
+<div style="position: fixed; bottom: 0px; right: 20px; z-index: 1000; margin: 0px 0;">
+  <a href="mode_effects_database_download.xlsx" download class="btn btn-primary">⬇️ Download</a>
+</div>
