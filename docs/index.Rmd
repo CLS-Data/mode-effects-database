@@ -74,7 +74,21 @@ output:
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+.fixed-box {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  background-color: #f9f9f9;
+  padding: 5px 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  z-index: 1000;
+  line-height: 1.2;
+  margin: 0;
+}
 </style>
+
 
 
 ```{r setup, include=FALSE}
@@ -96,21 +110,25 @@ Intro
 Column
 -------------------------------------
 
+<div class="fixed-box">
+  🔧 <a href="https://github.com/CLS-Data/mode-effects-database">Submit issues via GitHub</a>.
+</div>
+
 <h5> Introduction </h5>
 <hr style="border:2px solid gray">
 
-This searchable database contains a comprehensive collection of mode effects estimates. Here you will find mode effect estimates obtained from experimental or quasi-experimental studies that have either been embedded within existing surveys, or have been conducted as part of standalone experiments in the general population or age-, sex-, or region-specific strata of the general population.
+This searchable database contains a comprehensive collection of mode effects estimates. Here you will find mode effect estimates obtained from experimental or quasi-experimental studies that have either been embedded within existing surveys, or have been conducted as part of standalone experiments in the general population or age-, sex-, or region-specific strata of the general population. The database is part of a systematic review, the content of which is up-to-date as of March 2025, when the search was conducted.
 
 The purpose of this database is to allow users of mixed-mode data to easily find a mode effect reported in the literature for a specific variable, mode comparison, and a population of interest. This estimate can then be used to explore the sensitivity of findings based on the size of the mode effect that may be expected, or as a way to calibrate measures to a single mode. See [Wright et al. (2024)](https://cls.ucl.ac.uk/data_documentation/handling-mode-effects-in-the-cls-cohort-studies-user-guide-nov-2024/) for more details.
 
-The mode effects have been located using a systematic search of the bibliographic databases Scopus, Embase 1974-2025, MEDLINE 1946-2025, Health and Psychosocial Instruments, APA PsycInfo, APA PsycExtra, Web of Science Core Collection (all searched in March 2025). Searches were also conducted in Google Scholar and within the citations and references of the already included studies.
+The mode effects have been located using a systematic search of the bibliographic databases Scopus, Embase 1974-2025, MEDLINE 1946-2025, Health and Psychosocial Instruments, APA PsycInfo, APA PsycExtra, Web of Science Core Collection (all searched in March 2025). Searches were also conducted in Google Scholar and within the citations and references of the already included studies. 
 
 <h5>How to use </h5>
 <hr style="border:2px solid gray">
 
 1. To use the database, navigate to the 'Mode effects' tab, where you can search for mode effect estimates based on specific item, item category, population, year of publication, country, and other details. All fields are searchable or have an available drop-down menu to make it easier to narrow down to relevant mode effects. The global search field in the top-right corner searches all fields in the database simultaneously. The custom search builder in the top-left corner allows users to build a combination of searches. For example, by combining 1) "Sub-category", "Equals", "Smoking", and 2) "Reference mode", "Contains", then typing "web", results will be filtered to those items related to smoking for which the reference mode contains 'Web'. An alternative way to search is to use the filter boxes at the top of each column, which are either free text or drop-down menus, and allow building of more complex search combinations. 
 
-2. The 'Study details' tab contains more information about the design and reporting of each study. To see more details about the study from which a mode effect estimate has been obtained, the two tables can be cross-referenced using the unique ID in the first column.
+2. The 'Study details' tab contains more information about the design and reporting of each study, as well as appraisal of the quality of reporting, any relevant comments regarding selection and item non-response, as well as general comments that highlight any other relevant information. To see more details about the study from which a mode effect estimate has been obtained, the two tables can be cross-referenced using the unique ID in the first column.
 
 *Things to note:*
 
@@ -152,11 +170,12 @@ Column
 datatable(
   mode_effects,
   container = htmltools::withTags(table(
+    id = 'mode_table',
     class = 'display',
     thead(
       tr(
         # spanners
-        th(colspan = 8, 'Study', style = 'text-align: center; background-color: #e9ecef;'),
+        th(colspan = 9, 'Study', style = 'text-align: center; background-color: #e9ecef;'),
         th(colspan = 4, 'Variable', style = 'text-align: center; background-color: #d1ecf1;'),
         th(colspan = 2, 'Mode', style = 'text-align: center; background-color: #d1ecf1;'),
         th(colspan = 2, 'Measure', style = 'text-align: center; background-color: #d1ecf1;'),
@@ -165,7 +184,7 @@ datatable(
       ),
 tr(lapply(seq_along(names(mode_effects)), function(i) {
           col_name <- names(mode_effects)[i]
-          if (i %in% c(8, 12, 14, 16, 26)) { # darker borders for these
+          if (i %in% c(9, 13, 15, 17, 27)) { # darker borders for these
             th(col_name, style = 'border-right: 2px solid #666;')
           } else {
             th(col_name)
@@ -177,6 +196,19 @@ tr(lapply(seq_along(names(mode_effects)), function(i) {
   rownames = FALSE,
   extensions = c("SearchBuilder", "DateTime"),
   options = list(
+    columnDefs = list(
+  list(
+    targets = 0,  # assumes ID is the first column
+    render = JS("
+      function(data, type, row, meta) {
+        if (type === 'display') {
+          return '<a href=\"#\" class=\"id-link\" data-id=\"' + data + '\" data-target=\"studies\">' + data + '</a>';
+        }
+        return data;
+      }
+    ")
+  )
+),
     dom = 'Qlfrt<"dt-bottom-left"p>',
     searchBuilder = TRUE,
     searchHighlight = TRUE,
@@ -232,15 +264,33 @@ drawCallback = JS("
       }
 
       $('#' + infoId).text(resultsText);
+      
+      // Add reset button with new functionality
+      var resetBtnId = 'reset-btn-' + settings.sInstance;
+      if (!$('#' + resetBtnId).length) {
+        $pager.append('<button id=\"' + resetBtnId + '\" class=\"btn btn-light btn-sm\" style=\"margin-left: 1rem;\">Reset filters</button>');
+      }
+      
+      // Reset button click handler - reload page and return to current tab
+      $('#' + resetBtnId).off('click').on('click', function() {
+        // Get the current active tab
+        var activeTab = $('.navbar-nav .active a').text().trim();
+        
+        // Store the active tab in sessionStorage before reload
+        sessionStorage.setItem('activeTab', activeTab);
+        
+        // Reload the page
+        location.reload();
+      });
     }
   }
 ")
-  ),
+),
   filter = "top",
   escape = FALSE
 ) %>%
   formatStyle(c("Mode effect estimate", "Standardised mode effect estimate"), backgroundColor = "#f9dce3")%>%
-  formatStyle(columns = c(8, 12, 14, 16, 26), `border-right` = "2px solid #666")
+  formatStyle(columns = c(9, 13, 15, 17, 27), `border-right` = "2px solid #666")
 ```
 
 <div style="position: fixed; bottom: 0px; right: 20px; z-index: 1000; margin: 0px 0;">
@@ -256,17 +306,18 @@ Column
 ```{r studies-table}
 datatable(studies_info,
           container = htmltools::withTags(table(
+    id = 'studies_table',
     class = 'display',
     thead(
       tr(
         # spanners
-        th(colspan = 6, 'General', style = 'text-align: center; background-color: #e9ecef;'),
+        th(colspan = 7, 'General', style = 'text-align: center; background-color: #e9ecef;'),
         th(colspan = 8, 'Design', style = 'text-align: center; background-color: #ffffed;'),
         th(colspan = 9, 'Quality and appraisal', style = 'text-align: center; background-color: #ffd3c0;'),
       ),
      tr(lapply(seq_along(names(studies_info)), function(i) {
           col_name <- names(studies_info)[i]
-          if (i %in% c(6, 14)) { # darker borders for these
+          if (i %in% c(7, 15)) { # darker borders for these
             th(col_name, style = 'border-right: 2px solid #666;')
           } else {
             th(col_name)
@@ -285,7 +336,20 @@ datatable(studies_info,
             scrollY = "55vh",
             scrollCollapse = FALSE,
             autoWidth = TRUE,
-            columnDefs = list(list(width = "100px", targets = "_all")),
+            columnDefs = list(
+  list(
+    targets = 0,  # assumes ID is the first column
+    render = JS("
+      function(data, type, row, meta) {
+        if (type === 'display') {
+          return '<a href=\"#\" class=\"id-link\" data-id=\"' + data + '\" data-target=\"mode\">' + data + '</a>';
+        }
+        return data;
+      }
+    ")
+  ),
+  list(width = '100px', targets = '_all')
+),
             # ensure search box is always fixed above table
     initComplete = JS("
   function(settings, json) {
@@ -334,17 +398,61 @@ drawCallback = JS("
       }
 
       $('#' + infoId).text(resultsText);
+      
+      // Add reset button with new functionality
+      var resetBtnId = 'reset-btn-' + settings.sInstance;
+      if (!$('#' + resetBtnId).length) {
+        $pager.append('<button id=\"' + resetBtnId + '\" class=\"btn btn-light btn-sm\" style=\"margin-left: 1rem;\">Reset filters</button>');
+      }
+      
+      // Reset button click handler - reload page and return to current tab
+      $('#' + resetBtnId).off('click').on('click', function() {
+        // Get the current active tab
+        var activeTab = $('.navbar-nav .active a').text().trim();
+        
+        // Store the active tab in sessionStorage before reload
+        sessionStorage.setItem('activeTab', activeTab);
+        
+        // Reload the page
+        location.reload();
+      });
     }
   }
-")
-         ),
+")         ),
           filter = "top",
           escape = FALSE,
           height = "auto",
           width = "100%") %>%
 formatStyle(columns = 1:ncol(studies_info), fontSize = '12px') %>%
-  formatStyle(columns = c(6, 14), `border-right` = "2px solid #666")
+  formatStyle(columns = c(7, 15), `border-right` = "2px solid #666")
 ```
 <div style="position: fixed; bottom: 0px; right: 20px; z-index: 1000; margin: 0px 0;">
   <a href="mode_effects_database_download.xlsx" download class="btn btn-primary">⬇️ Download</a>
 </div>
+
+<script>
+$(document).on('click', 'a.id-link', function(e) {
+  e.preventDefault();
+  var id = $(this).data('id');
+  var target = $(this).data('target'); // "studies" or "mode"
+
+  // decide which tab to show
+  var tabText = (target === 'studies') ? 'Details of each study' : 'Mode effects';
+
+  // click the correct tab in the navbar
+  var navLink = $('.navbar-nav a').filter(function() {
+    return $(this).text().trim() === tabText;
+  }).first();
+  if (navLink.length) navLink.click();
+
+  // wait a moment for tab to show, then filter the right table
+  setTimeout(function() {
+    var tableId = (target === 'studies') ? 'studies_table' : 'mode_table';
+    var dt = $('#' + tableId).DataTable();
+    dt.column(0).search('^' + id + '$', true, false).draw();
+    // optional scroll into view
+    var pos = $('#' + tableId).offset();
+    if (pos) $('html, body').animate({scrollTop: pos.top - 80}, 300);
+  }, 300);
+});
+</script>
