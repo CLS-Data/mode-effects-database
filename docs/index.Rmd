@@ -294,7 +294,7 @@ drawCallback = JS("
 ```
 
 <div style="position: fixed; bottom: 0px; right: 20px; z-index: 1000; margin: 0px 0;">
-  <a href="mode_effects_database_download.xlsx" download class="btn btn-primary">⬇️ Download</a>
+  <a href="mode_effects_download.xlsx" download class="btn btn-primary">⬇️ Download</a>
 </div>
 
 Details of each study
@@ -427,7 +427,7 @@ formatStyle(columns = 1:ncol(studies_info), fontSize = '12px') %>%
   formatStyle(columns = c(7, 15), `border-right` = "2px solid #666")
 ```
 <div style="position: fixed; bottom: 0px; right: 20px; z-index: 1000; margin: 0px 0;">
-  <a href="mode_effects_database_download.xlsx" download class="btn btn-primary">⬇️ Download</a>
+  <a href="studies_info_download.xlsx" download class="btn btn-primary">⬇️ Download</a>
 </div>
 
 <script>
