@@ -140,6 +140,13 @@ The mode effects have been located using a systematic search of the bibliographi
 
 <br>
 
+<h5> How to cite </h5>
+<hr style="border:2px solid gray">
+
+Tomova GD, Silverwood RJ, Wright L. 2026. Mode effects on survey item measurement: A systematic review of the experimental evidence. *SocArXiv*. [https://doi.org/10.31235/osf.io/bc7qn_v1](https://doi.org/10.31235/osf.io/bc7qn_v1)
+
+<br>
+
 <h5> Further resources </h5>
 <hr style="border:2px solid gray">
 
