@@ -1,13 +1,15 @@
 ---
-title: "MODE EFFECTS DATABASE"
+title: "Mode Effects Database"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
+    logo: "cls_logo_small.png"
     theme: 
-      bg: "#FFFFFF"        # white background
+      bg: "#FAFAFA"        # white background
       fg: "#000000"        # black text
-      primary: "#dc345c"   # accent colour cls
+      primary: "#993bff"     # highlight colour cls
+      navbar-bg: "#361a54"   # banner colour cls
       base_font: 
         google: "Open Sans"
         
@@ -19,12 +21,37 @@ output:
 
 /* navigation tabs colour */
 .navbar-nav > li > a {
-  color: #FFFFFF !important;
+  color: #FAFAFA !important;
+}
+
+@font-face {
+  font-family: 'UCL Sans';
+  src: url('UCLSans-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 /* navigation bar always visible */
 .navbar {
   z-index: 4000;
+}
+
+/* banner font - ucl sans */
+.navbar .navbar-brand,
+.navbar .navbar-brand *,
+.navbar-nav > li > a {
+  font-family: 'UCL Sans', 'Open Sans', sans-serif !important;
+}
+
+/* banner title - bold */
+.navbar .navbar-brand,
+.navbar .navbar-brand * {
+  font-weight: bold !important;
+}
+
+/* body text font - aptos, open sans fallback*/
+body {
+  font-family: Aptos, 'Open Sans', sans-serif;
 }
 
 /* fixed pagination box */
@@ -117,11 +144,11 @@ Column
 <h5> Introduction </h5>
 <hr style="border:2px solid gray">
 
-This searchable database contains a comprehensive collection of mode effects estimates. Here you will find mode effect estimates obtained from experimental or quasi-experimental studies that have either been embedded within existing surveys, or have been conducted as part of standalone experiments in the general population or age-, sex-, or region-specific strata of the general population. The database is part of a systematic review, the content of which is up-to-date as of March 2025, when the search was conducted.
+This searchable database contains a comprehensive collection of mode effects estimates. Here you will find mode effect estimates obtained from 90 mode experiments, identified and extracted as part of a [systematic review](https://doi.org/10.31235/osf.io/bc7qn_v1){target="_blank"} of the literature. 
 
-The purpose of this database is to allow users of mixed-mode data to easily find a mode effect reported in the literature for a specific variable, mode comparison, and a population of interest. This estimate can then be used to explore the sensitivity of findings based on the size of the mode effect that may be expected, or as a way to calibrate measures to a single mode. See [Wright et al. (2024)](https://cls.ucl.ac.uk/data_documentation/handling-mode-effects-in-the-cls-cohort-studies-user-guide-nov-2024/) for more details.
+This database can be used to inform future design and analysis of mixed-mode survey data. It allows users to find mode effect estimates reported in the literature for a given variable, mode comparison, and population of interest. The mode effect estimates can be used to guide survey design decisions by providing information on the risk of mode effects for different survey items and in different populations. The estimates can also be used to assess and improve the quality of mixed-mode data analysis. For example, they can be used to conduct sensitivity analyses that seek to either correct, or evaluate the implications of, bias arising from mode effects. See [Wright et al. (2024)](https://cls.ucl.ac.uk/data_documentation/handling-mode-effects-in-the-cls-cohort-studies-user-guide-nov-2024/){target="_blank"} for more details.
 
-The mode effects have been located using a systematic search of the bibliographic databases Scopus, Embase 1974-2025, MEDLINE 1946-2025, Health and Psychosocial Instruments, APA PsycInfo, APA PsycExtra, Web of Science Core Collection (all searched in March 2025). Searches were also conducted in Google Scholar and within the citations and references of the already included studies. 
+The mode effects have been located using a systematic search of the bibliographic databases Scopus, Embase 1974-2025, MEDLINE 1946-2025, Health and Psychosocial Instruments, APA PsycInfo, APA PsycExtra, Web of Science Core Collection (all searched in March 2025). Further searches were also conducted in Google Scholar and via a backwards and forwards citation screen process. All searches were conducted in March-April 2025; the database therefore contains mode effects published up until then.
 
 <h5>How to use </h5>
 <hr style="border:2px solid gray">
@@ -132,39 +159,46 @@ The mode effects have been located using a systematic search of the bibliographi
 
 *Things to note:*
 
-• Not all relevant values were reported in all studies. Where possible, we have derived additional measures based on the information provided. Any values that have been derived post-hoc are presented in italics.
+• Not all relevant values were reported in all studies. Where possible, we have manually derived additional measures based on the information provided. Any values that have been derived post-hoc are presented in italics.
 
 • Where a cell is empty, this means that no sufficient information was reported in the study to allow for direct extraction or derivation.
 
-• Where possible, we prioritised extracting unadjusted estimates to allow consistency in comparisons. However, where selection weighting was applied, we prioritised the weighted estimates since they should be more generalisable. Further details of our extraction strategy can be seen in our [pre-registered protocol](https://osf.io/bs5dw).
+• Where possible, we prioritised extracting unadjusted estimates to allow consistency in comparisons across studies. However, where weighting was applied to improve sample representativeness, we prioritised the weighted estimates since they should be more generalisable to the stated target population. Further details of our extraction strategy can be seen in our [pre-registered protocol](https://osf.io/bs5dw){target="_blank"} and [pre-print](https://doi.org/10.31235/osf.io/bc7qn_v1){target="_blank"}.
 
 <br>
 
-<h5> How to cite </h5>
+<h5>How to cite </h5>
 <hr style="border:2px solid gray">
-
-Tomova GD, Silverwood RJ, Wright L. 2026. Mode effects on survey item measurement: A systematic review of the experimental evidence. *SocArXiv*. [https://doi.org/10.31235/osf.io/bc7qn_v1](https://doi.org/10.31235/osf.io/bc7qn_v1)
+Tomova GD, Silverwood RJ, Wright L. 2026. Mode effects on survey item measurement: A systematic review of the experimental evidence. SocArXiv. https://doi.org/10.31235/osf.io/bc7qn_v1 
 
 <br>
 
 <h5> Further resources </h5>
 <hr style="border:2px solid gray">
 
-For a detailed introduction and discussion of methods for handling mode effects, please see the following user guidance:
+For an accessible practice guide on when to anticipate mode effects in mixed-mode surveys, see:\
+[**Tomova et al. 2026. Survey Practice Guide 8: When to anticipate mode effects in mixed-mode surveys.**](https://surveyfutures.net/practice-guides){target="_blank"}
 
-[**Wright et al. 2024. Handling Mode Effects in the CLS Cohort Studies**](https://cls.ucl.ac.uk/data_documentation/handling-mode-effects-in-the-cls-cohort-studies-user-guide-nov-2024/)
+For an intuitive introduction to mode effects using directed acyclic graphs (DAGs), see:\
+[**Tomova et al. 2026. How can the use of different modes of survey data collection introduce bias? An introduction to mode effects using directed acyclic graphs (DAGs).**](https://doi.org/10.1093/aje/kwag017){target="_blank"}
+
+For a detailed introduction and discussion of methods for handling mode effects, see:\
+[**Wright et al. 2024. Handling Mode Effects in the CLS Cohort Studies**](https://cls.ucl.ac.uk/data_documentation/handling-mode-effects-in-the-cls-cohort-studies-user-guide-nov-2024/){target="_blank"}
+
 
 <br>
 
 <h5>About the project</h5>
 <hr style="border:2px solid gray">
 
-This database was created as part of the 'Assessing and Disseminating Methods for Handling Mode Effects' project within the Survey Data Collection Methods Collaboration ([**Survey Futures**](https://surveyfutures.net)), funded by the **Economic and Social Research Council** (ES/X014150/1).
-
 Authors:\
-Georgia Tomova, g.tomova@ucl.ac.uk | Richard Silverwood, r.silverwood@ucl.ac.uk | Liam Wright, liam.wright@ucl.ac.uk\
+[**Georgia Tomova**](https://profiles.ucl.ac.uk/102685-georgia-tomova){target="_blank"} | [**Richard Silverwood**](https://profiles.ucl.ac.uk/70650-richard-silverwood){target="_blank"} | [**Liam Wright**](https://profiles.ucl.ac.uk/62967-liam-wright){target="_blank"}\
 
-[**UCL Centre for Longitudinal Studies**](http://cls.ucl.ac.uk)
+Funding:\
+This database was created as part of the 'Assessing and Disseminating Methods for Handling Mode Effects' project within the wider Survey Data Collection Methods Collaboration programme (known as [**Survey Futures**](https://surveyfutures.net){target="_blank"}), funded by the ESRC (grant ES/X014150/1).
+
+![](SF logo.png){width=200px}
+
 
 <br>
 
@@ -182,12 +216,12 @@ datatable(
     thead(
       tr(
         # spanners
-        th(colspan = 9, 'Study', style = 'text-align: center; background-color: #e9ecef;'),
-        th(colspan = 4, 'Variable', style = 'text-align: center; background-color: #d1ecf1;'),
-        th(colspan = 2, 'Mode', style = 'text-align: center; background-color: #d1ecf1;'),
-        th(colspan = 2, 'Measure', style = 'text-align: center; background-color: #d1ecf1;'),
-        th(colspan = 10, 'Mode effect', style = 'text-align: center; background-color: #f9dce3;'), 
-        th(colspan = 2, 'Sample size', style = 'text-align: center; background-color: #e9ecef;'),
+        th(colspan = 9, 'Study', style = 'text-align: center; background-color: #ddbdff;'),
+        th(colspan = 4, 'Variable', style = 'text-align: center; background-color: #30d6ff;'),
+        th(colspan = 2, 'Mode', style = 'text-align: center; background-color: #30d6ff;'),
+        th(colspan = 2, 'Measure', style = 'text-align: center; background-color: #30d6ff;'),
+        th(colspan = 10, 'Mode effect', style = 'text-align: center; background-color: #ba82ff;'), 
+        th(colspan = 2, 'Sample size', style = 'text-align: center; background-color: #ddbdff;'),
       ),
 tr(lapply(seq_along(names(mode_effects)), function(i) {
           col_name <- names(mode_effects)[i]
@@ -296,7 +330,7 @@ drawCallback = JS("
   filter = "top",
   escape = FALSE
 ) %>%
-  formatStyle(c("Mode effect estimate", "Standardised mode effect estimate"), backgroundColor = "#f9dce3")%>%
+  formatStyle(c("Mode effect estimate", "Standardised mode effect estimate"), backgroundColor = "#eedeff")%>%
   formatStyle(columns = c(9, 13, 15, 17, 27), `border-right` = "2px solid #666")
 ```
 
@@ -318,9 +352,9 @@ datatable(studies_info,
     thead(
       tr(
         # spanners
-        th(colspan = 7, 'General', style = 'text-align: center; background-color: #e9ecef;'),
-        th(colspan = 8, 'Design', style = 'text-align: center; background-color: #ffffed;'),
-        th(colspan = 9, 'Quality and appraisal', style = 'text-align: center; background-color: #ffd3c0;'),
+        th(colspan = 7, 'General', style = 'text-align: center; background-color: #ddbdff;'),
+        th(colspan = 8, 'Design', style = 'text-align: center; background-color: #30d6ff;'),
+        th(colspan = 9, 'Quality and appraisal', style = 'text-align: center; background-color: #ba82ff;'),
       ),
      tr(lapply(seq_along(names(studies_info)), function(i) {
           col_name <- names(studies_info)[i]
